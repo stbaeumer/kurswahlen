@@ -1,0 +1,6 @@
+U:\Source\Repos\kurswahlen\kurswahlen\obj\Debug\kurswahlen.csprojResolveAssemblyReference.cache
+U:\Source\Repos\kurswahlen\kurswahlen\bin\Debug\kurswahlen.exe.config
+U:\Source\Repos\kurswahlen\kurswahlen\bin\Debug\kurswahlen.exe
+U:\Source\Repos\kurswahlen\kurswahlen\bin\Debug\kurswahlen.pdb
+U:\Source\Repos\kurswahlen\kurswahlen\obj\Debug\kurswahlen.exe
+U:\Source\Repos\kurswahlen\kurswahlen\obj\Debug\kurswahlen.pdb
