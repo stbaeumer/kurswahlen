@@ -10,6 +10,8 @@ namespace kurswahlen
         public Unterrichts(Schuelers schuelers, Klasses klasses, Fachs fachs, string aktSj, int periode)
         {
 
+            Console.Write("Unterrichte (nur Verkursungen) ".PadRight(75, '.'));
+
             int id = 0;
             try
             {
@@ -71,15 +73,19 @@ WHERE (((SCHOOLYEAR_ID)= " + aktSj + ") AND ((TERM_ID)=" + periode + ") AND (((L
                                         {
                                             // Reliunterricht muss verkurst sein!
 
-                                            if (
+                                            if (unterricht.Klasse.NameUntis != "BTeam")
+                                            {
+                                                if (
                                                 unterricht.Fach.KürzelUntis.StartsWith("KR ") ||
                                                 unterricht.Fach.KürzelUntis.StartsWith("ER ") ||
                                                 unterricht.Fach.KürzelUntis == "KR" ||
                                                 unterricht.Fach.KürzelUntis == "ER"
                                                 )
-                                            {
-                                                Console.WriteLine("Achtung: der Unterricht " + unterricht.Fach.KürzelUntis + " mit der ID " + id + " ist Relgionsunterricht, aber nicht als Kurs angelegt!");
-                                                Console.ReadKey();
+                                                {
+
+                                                    Console.WriteLine("Achtung: der Unterricht " + unterricht.Fach.KürzelUntis + " mit der ID " + id + " ist Relgionsunterricht, aber nicht als Kurs angelegt!");
+                                                    Console.ReadKey();
+                                                }
                                             }
                                         }
                                     }
@@ -87,8 +93,7 @@ WHERE (((SCHOOLYEAR_ID)= " + aktSj + ") AND ((TERM_ID)=" + periode + ") AND (((L
                             }
                             catch (Exception ex)
                             {
-                                Console.WriteLine(ex + " \n\nFehler beim Unterricht mit ID" + id + ". Möglicherweise fehlt das Fach beim Unterricht in Untis? RNTER");
-                                Console.ReadKey();
+                                
                             }                                            
                         }
                     };
@@ -100,6 +105,7 @@ WHERE (((SCHOOLYEAR_ID)= " + aktSj + ") AND ((TERM_ID)=" + periode + ") AND (((L
             {
                
             }
+            Console.WriteLine(this.Count);
         }
     }
 }

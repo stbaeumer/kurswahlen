@@ -38,7 +38,7 @@ namespace kurswahlen
                 
                 // Für alle Nicht-Gym-Schüler werden die Religionskurswahlen hinzugefügt
 
-                schuelers.ReliKurswahlenHinzufügenOderLöschen(unterrichtsImKurssystem, kurswahlenIst, periode);
+                schuelers.ReliKurswahlenHinzufügenOderLöschen(unterrichtsImKurssystem, kurswahlenIst, aktSj[0] + aktSj[1], periode);
 
                 Console.WriteLine("");
 

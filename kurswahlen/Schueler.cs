@@ -60,6 +60,8 @@ namespace kurswahlen
                 {
                     oleDbConnection.Open();
 
+                    Console.Write(("[-] " + Nachname + ", " + Vorname + " (" + Klasse+") ").PadRight(75, '.'));
+
                     String my_querry = @"
 UPDATE StudentChoice 
 SET Deleted = True
@@ -67,6 +69,9 @@ WHERE((STUDENT_ID = '" + this.IdUntis + "' ) AND (TERM_ID = '" + periode + "'));
 
                     OleDbCommand cmd = new OleDbCommand(my_querry, oleDbConnection);
                     cmd.ExecuteNonQuery();
+                                        
+                    Console.WriteLine(" Reli in Untis-DB abgewählt.");
+
                 }
                 catch (Exception ex)
                 {

@@ -10,6 +10,8 @@ namespace kurswahlen
         {
             using (OleDbConnection oleDbConnection = new OleDbConnection(Global.ConnectionStringUntis))
             {
+                Console.Write("Fächer ".PadRight(75, '.'));
+
                 try
                 {
                     string queryString = @"SELECT DISTINCT 
@@ -36,9 +38,7 @@ WHERE Subjects.Schoolyear_id = " + aktSj + " AND Subjects.Deleted=No  AND ((Subj
                                                 
                         this.Add(fach);
                     };
-
-                    Console.WriteLine(("Fächer " + ".".PadRight(this.Count / 150, '.')).PadRight(48, '.') + (" " + this.Count).ToString().PadLeft(4), '.');
-
+                    
                     oleDbDataReader.Close();
                 }
                 catch (Exception ex)
@@ -48,6 +48,7 @@ WHERE Subjects.Schoolyear_id = " + aktSj + " AND Subjects.Deleted=No  AND ((Subj
                 finally
                 {
                     oleDbConnection.Close();
+                    Console.WriteLine(this.Count);
                 }
             }
         }

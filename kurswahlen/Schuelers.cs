@@ -487,13 +487,14 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                     finally
                     {
                         oleDbConnection.Close();
+
                         Console.WriteLine(this.Count);
                     }
                 }
             }
         }
 
-        internal void ReliKurswahlenHinzufügenOderLöschen(Unterrichts unterrichts, Kurswahlen kurswahlenIst, int periode)
+        internal void ReliKurswahlenHinzufügenOderLöschen(Unterrichts unterrichts, Kurswahlen kurswahlenIst, string aktSJ, int periode)
         {
             foreach (var schueler in this)
             {
@@ -539,6 +540,7 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                                   where k.StudentId == kurswahl.StudentId
                                   select k).Any())
                             {
+                                kurswahl.AktSj = aktSJ;
                                 kurswahl.InsertIntoStudentChoice();
                             }
                         }

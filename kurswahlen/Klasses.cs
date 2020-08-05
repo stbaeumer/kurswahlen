@@ -11,6 +11,8 @@ namespace kurswahlen
         {
             using (OleDbConnection oleDbConnection = new OleDbConnection(Global.ConnectionStringUntis))
             {
+                Console.Write("Klassen ".PadRight(75, '.'));
+
                 try
                 {
                     string queryString = @"SELECT DISTINCT 
@@ -37,9 +39,7 @@ FROM Class LEFT JOIN Teacher ON Class.TEACHER_ID = Teacher.TEACHER_ID WHERE (((C
 
                         this.Add(klasse);
                     };
-
-                    Console.WriteLine(("Klassen " + ".".PadRight(this.Count / 150, '.')).PadRight(48, '.') + (" " + this.Count).ToString().PadLeft(4), '.');
-
+                    
                     oleDbDataReader.Close();
 
                 }
@@ -51,6 +51,7 @@ FROM Class LEFT JOIN Teacher ON Class.TEACHER_ID = Teacher.TEACHER_ID WHERE (((C
                 finally
                 {
                     oleDbConnection.Close();
+                    Console.WriteLine(this.Count);
                 }
             }
         }

@@ -26,7 +26,7 @@ namespace kurswahlen
         /// Die Number ist Teil des PS bei der Kurswahl. Sie muss je Schüler einmalig sein.
         /// </summary>
         public int Number { get; internal set; }
-        public string AktSj { get; private set; }
+        public string AktSj { get; set; }
         public int Periode { get; private set; }
 
         public Kurswahl(string aktSj, int periode)
@@ -47,6 +47,8 @@ namespace kurswahlen
             {
                 try
                 {
+                    Console.Write(("[+] " + this.Nachname + ", " + this.Vorname + " (" + this.Klasse + ") ").PadRight(75, '.'));
+                    
                     oleDbConnection.Open();
 
                     String my_querry = "INSERT INTO StudentChoice(" +
@@ -59,7 +61,7 @@ namespace kurswahlen
                         "AlternativeCourses" +
                          ")VALUES('" +
                          "177659" + "','" +
-                         AktSj + "','" +
+                         this.AktSj + "','" +
                          "1" + "','" +
                          this.StudentId + "','" +
                          Periode + "','" +
@@ -68,6 +70,8 @@ namespace kurswahlen
 
                     OleDbCommand cmd = new OleDbCommand(my_querry, oleDbConnection);
                     cmd.ExecuteNonQuery();
+
+                    Console.WriteLine(" Reli in Untis-DB hinzugefügt. ENTER");                    
                 }
                 catch (Exception ex)
                 {

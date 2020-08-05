@@ -1,0 +1,9 @@
+\\fs01\Schulverwaltung\atlantis2webuntis\kurswahlen.exe.config
+\\fs01\Schulverwaltung\atlantis2webuntis\kurswahlen.exe
+\\fs01\Schulverwaltung\atlantis2webuntis\kurswahlen.pdb
+U:\Source\Repos\kurswahlen\kurswahlen\obj\Release\kurswahlen.exe
+U:\Source\Repos\kurswahlen\kurswahlen\obj\Release\kurswahlen.pdb
+\\fs01\Schulverwaltung\kurswahlen\kurswahlen.exe.config
+\\fs01\Schulverwaltung\kurswahlen\kurswahlen.exe
+\\fs01\Schulverwaltung\kurswahlen\kurswahlen.pdb
+U:\Source\Repos\kurswahlen\kurswahlen\obj\Release\kurswahlen.csprojResolveAssemblyReference.cache
