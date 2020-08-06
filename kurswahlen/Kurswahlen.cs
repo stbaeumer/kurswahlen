@@ -17,6 +17,8 @@ namespace kurswahlen
             {
                 try
                 {
+                    Console.Write("Kurswahlen ".PadRight(75, '.') + " ");
+
                     string queryString = @"SELECT 
 StudentChoice.STUDENT_ID, 
 Student.Longname, 
@@ -25,7 +27,8 @@ Student.BirthDate,
 StudentChoice.Number, 
 StudentChoice.AlternativeCourses,
 Student.Name,
-Student.StudNumber
+Student.StudNumber,
+StudentChoice.Deleted
 FROM Student LEFT JOIN StudentChoice ON Student.STUDENT_ID = StudentChoice.STUDENT_ID
 WHERE (((StudentChoice.SCHOOLYEAR_ID)= " + aktSj + ") AND ((StudentChoice.TERM_ID)=" + periode + ") AND (((StudentChoice.Deleted)=No))) ORDER BY StudentChoice.STUDENT_ID;";
 
@@ -49,6 +52,7 @@ WHERE (((StudentChoice.SCHOOLYEAR_ID)= " + aktSj + ") AND ((StudentChoice.TERM_I
                                            where u.IdUntis.ToString() == kurswahl.AlternativeCourses[0].Split('/')[0]
                                            select u.Klasse.NameUntis).FirstOrDefault();
                         kurswahl.AtlantisId = Global.SafeGetString(oleDbDataReader, 7);
+                        kurswahl.Deleted = oleDbDataReader.GetBoolean(8);
                         this.Add(kurswahl);
                     };
                     oleDbDataReader.Close();
@@ -60,6 +64,7 @@ WHERE (((StudentChoice.SCHOOLYEAR_ID)= " + aktSj + ") AND ((StudentChoice.TERM_I
                 finally
                 {
                     oleDbConnection.Close();
+                    Console.WriteLine(this.Count);
                 }
             }
         }

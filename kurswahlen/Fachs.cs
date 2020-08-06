@@ -10,7 +10,7 @@ namespace kurswahlen
         {
             using (OleDbConnection oleDbConnection = new OleDbConnection(Global.ConnectionStringUntis))
             {
-                Console.Write("Fächer ".PadRight(75, '.'));
+                Console.Write("Fächer ".PadRight(75, '.') + " ");
 
                 try
                 {

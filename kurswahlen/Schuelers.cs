@@ -364,7 +364,7 @@ schue_sj.durchschnitts_note_jz AS DurchschnittsnoteJahreszeugnis,
          ) 
 ORDER BY ausgetreten DESC, klasse, schueler.name_1, schueler.name_2", connection);
 
-                Console.Write("Schüler*innen ".PadRight(75, '.'));
+                Console.Write("Schüler*innen ".PadRight(75, '.') + " ");
 
                 connection.Open();
                 schuelerAdapter.Fill(dataSet, "DBA.schueler");
@@ -433,6 +433,8 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                         oleDbConnection.Open();
                         OleDbDataReader oleDbDataReader = oleDbCommand.ExecuteReader();
 
+                        List<Schueler> schuelers = new List<Schueler>();
+
                         while (oleDbDataReader.Read())
                         {
                             Schueler schueler = new Schueler();
@@ -476,9 +478,17 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                                                       where a.Gebdat.Date == schueler.Gebdat.Date
                                                       select a.Relianmeldung).FirstOrDefault();
                             
-                            this.Add(schueler);
+                            schuelers.Add(schueler);
+                            
                         };
                         oleDbDataReader.Close();
+
+                        schuelers = schuelers.OrderBy(o => o.Klasse).ToList();
+
+                        foreach (var schueler in schuelers)
+                        {
+                            this.Add(schueler);
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -498,61 +508,97 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
         {
             foreach (var schueler in this)
             {
-                // Für jeden Schüler au0erhalb der Gym ...
-
-                if (!schueler.Klasse.StartsWith("G"))
+                if (true /*schueler.IdUntis == 14768*/)
                 {
-                    // ... sofern in seiner Klasse Religionsunterricht angeboten wird ...
+                    // Für jeden Schüler au0erhalb der Gym ...
 
-                    var reliunterrichtDerKlasseDesSchülers = (from u in unterrichts
-                                                              where u.Klasse.NameUntis == schueler.Klasse
-                                                              where (u.Fach.KürzelUntis.StartsWith("KR ") ||
-                                                              u.Fach.KürzelUntis.StartsWith("ER ") ||
-                                                              u.Fach.KürzelUntis == "KR" ||
-                                                              u.Fach.KürzelUntis == "ER")
-                                                              select u).FirstOrDefault();
-                    if (reliunterrichtDerKlasseDesSchülers != null)
+                    if (!schueler.Klasse.StartsWith("G"))
                     {
-                        // ... und der Schüler sich nicht abgemeldet oder ab- und später wieder angemeldet hat ...
+                        // ... sofern in seiner Klasse Religionsunterricht angeboten wird ...
 
-                        if ((schueler.Reliabmeldung.Year == 1 || schueler.Relianmeldung > schueler.Reliabmeldung))
+                        var reliunterrichtDerKlasseDesSchülers = (from u in unterrichts
+                                                                  where u.Klasse.NameUntis == schueler.Klasse
+                                                                  where (u.Fach.KürzelUntis.StartsWith("KR ") ||
+                                                                  u.Fach.KürzelUntis.StartsWith("ER ") ||
+                                                                  u.Fach.KürzelUntis == "KR" ||
+                                                                  u.Fach.KürzelUntis == "ER")
+                                                                  select u).FirstOrDefault();
+                        if (reliunterrichtDerKlasseDesSchülers != null)
                         {
-                            // ... wird die Kurswahl hinzugefügt.
+                            // ... und der Schüler sich nicht abgemeldet oder ab- und später wieder angemeldet hat ...
 
                             Kurswahl kurswahl = new Kurswahl();
-                            kurswahl.StudentKurzname = schueler.Anmeldename;
-                            kurswahl.Geburtsdatum = schueler.Gebdat;
-                            kurswahl.Nachname = schueler.Nachname;
-                            kurswahl.Vorname = schueler.Vorname;
-                            kurswahl.StudentId = schueler.IdUntis;
-                            kurswahl.AlternativeCourses.Add(reliunterrichtDerKlasseDesSchülers.IdUntis.ToString() + "/" + reliunterrichtDerKlasseDesSchülers.Fach.IdUntis + "/1");
-                            kurswahl.Fach = reliunterrichtDerKlasseDesSchülers.Fach.KürzelUntis;
-                            kurswahl.Klasse = schueler.Klasse;
-                            kurswahl.Number = schueler.Kurse.Count == 0 ? 1 : (from k in schueler.Kurse select k.Number).Max() + 1;
 
-                            schueler.Kurse.Add(kurswahl);
-
-                            // Wenn die Reli-Kurswahl in Untis noch nicht existiert, wird sie ergänzt:
-
-                            if (!(from k in kurswahlenIst
-                                  where k.Fach == kurswahl.Fach
-                                  where k.Klasse == kurswahl.Klasse
-                                  where k.StudentId == kurswahl.StudentId
-                                  select k).Any())
+                            if ((schueler.Reliabmeldung.Year == 1 || schueler.Relianmeldung > schueler.Reliabmeldung))
                             {
-                                kurswahl.AktSj = aktSJ;
-                                kurswahl.InsertIntoStudentChoice();
+                                // ... wird die Kurswahl hinzugefügt.
+
+                                kurswahl.StudentKurzname = schueler.Anmeldename;
+                                kurswahl.Geburtsdatum = schueler.Gebdat;
+                                kurswahl.Nachname = schueler.Nachname;
+                                kurswahl.Vorname = schueler.Vorname;
+                                kurswahl.StudentId = schueler.IdUntis;
+                                kurswahl.AlternativeCourses.Add(reliunterrichtDerKlasseDesSchülers.IdUntis.ToString() + "/" + reliunterrichtDerKlasseDesSchülers.Fach.IdUntis + "/1");
+                                kurswahl.Fach = reliunterrichtDerKlasseDesSchülers.Fach.KürzelUntis;
+                                kurswahl.Klasse = schueler.Klasse;
+                                kurswahl.Number = schueler.Kurse.Count == 0 ? 1 : (from k in schueler.Kurse select k.Number).Max() + 1;
+
+                                schueler.Kurse.Add(kurswahl);
+
+                                // Wenn die Reli-Kurswahl in Untis noch nicht existiert, wird sie ergänzt:
+
+                                if (!(from k in kurswahlenIst
+                                      where k.Fach == kurswahl.Fach
+                                      where k.Klasse == kurswahl.Klasse
+                                      where k.StudentId == kurswahl.StudentId
+                                      select k).Any())
+                                {
+                                    kurswahl.AktSj = aktSJ;
+                                    kurswahl.InsertIntoStudentChoice();
+                                }
+
+                                // Wenn die Relikurswahl existert, aber Deleted ist, wird sie wieder aktiviert:
+
+                                if ((from k in kurswahlenIst
+                                     where k.Fach == kurswahl.Fach
+                                     where k.Klasse == kurswahl.Klasse
+                                     where k.StudentId == kurswahl.StudentId
+                                     where k.Deleted == true
+                                     select k).Any())
+                                {
+                                    kurswahl.AktSj = aktSJ;
+                                    schueler.UpdateStudentChoice(periode);
+                                }
+
+                            }
+
+                            // Wenn der Schüler den existierenden Religionskurs abgewählt hat, ...
+
+                            else
+                            {
+                                // ... und bereits eine Kurswahl besteht ...
+
+                                var kk = (from k in kurswahlenIst
+                                          where k.Fach == reliunterrichtDerKlasseDesSchülers.Fach.KürzelUntis
+                                          where k.Klasse == schueler.Klasse
+                                          where k.StudentId == schueler.IdUntis
+                                          select k).FirstOrDefault();
+
+                                if (kk != null)
+                                {
+                                    // ... und die Kurswahl nicht bereits delted wurde ...
+
+                                    if (!kk.Deleted)
+                                    {
+                                        // ... wird die Kurswahl gelöscht.
+
+                                        schueler.DeleteStudentChoice(periode);
+                                    }
+                                }
                             }
                         }
-
-                        // Wenn der Schüler den existierenden Religionskurs abgewählt hat, dann wird die Kurswahl in Untis gelöscht.
-
-                        else
-                        {
-                            schueler.DeleteStudentChoice(periode);
-                        }
                     }
-                }
+                }                
             }
         }
 
@@ -566,7 +612,7 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                                   where k.Nachname == schueler.Nachname
                                   where k.Vorname == schueler.Vorname
                                   where k.Geburtsdatum == schueler.Gebdat
-                                  where k.Klasse.StartsWith("G")
+                                  //where k.Klasse.StartsWith("G")
                                   select k).ToList());
             }
         }

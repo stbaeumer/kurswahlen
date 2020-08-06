@@ -11,7 +11,7 @@ namespace kurswahlen
         {
             using (OleDbConnection oleDbConnection = new OleDbConnection(Global.ConnectionStringUntis))
             {
-                Console.Write("Klassen ".PadRight(75, '.'));
+                Console.Write("Klassen ".PadRight(75, '.') + " " );
 
                 try
                 {

@@ -10,7 +10,7 @@ namespace kurswahlen
         public Unterrichts(Schuelers schuelers, Klasses klasses, Fachs fachs, string aktSj, int periode)
         {
 
-            Console.Write("Unterrichte (nur Verkursungen) ".PadRight(75, '.'));
+            Console.Write("Unterrichte (nur Verkursungen) ".PadRight(75, '.') + " " );
 
             int id = 0;
             try

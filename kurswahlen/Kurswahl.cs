@@ -28,6 +28,7 @@ namespace kurswahlen
         public int Number { get; internal set; }
         public string AktSj { get; set; }
         public int Periode { get; private set; }
+        public bool Deleted { get; internal set; }
 
         public Kurswahl(string aktSj, int periode)
         {
@@ -47,7 +48,7 @@ namespace kurswahlen
             {
                 try
                 {
-                    Console.Write(("[+] " + this.Nachname + ", " + this.Vorname + " (" + this.Klasse + ") ").PadRight(75, '.'));
+                    Console.Write(("[+] " + (this.StudentId + " " + this.Nachname + ", " + this.Vorname).PadRight(40,'.') + " (" + this.Klasse + ") ").PadRight(75, '.'));
                     
                     oleDbConnection.Open();
 
@@ -75,7 +76,7 @@ namespace kurswahlen
                 }
                 catch (Exception ex)
                 {
-
+                    throw ex;
                 }
                 finally
                 {

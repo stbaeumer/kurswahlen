@@ -60,17 +60,49 @@ namespace kurswahlen
                 {
                     oleDbConnection.Open();
 
-                    Console.Write(("[-] " + Nachname + ", " + Vorname + " (" + Klasse+") ").PadRight(75, '.'));
+                    Console.Write(("[-] " + (this.IdAtlantis + " " + this.Nachname + ", " + this.Vorname).PadRight(40, '.') + " (" + this.Klasse + ") ").PadRight(75, '.'));
 
                     String my_querry = @"
 UPDATE StudentChoice 
-SET Deleted = True
-WHERE((STUDENT_ID = '" + this.IdUntis + "' ) AND (TERM_ID = '" + periode + "'));";
+SET StudentChoice.Deleted = True
+WHERE((StudentChoice.STUDENT_ID = " + this.IdUntis + " ) AND (TERM_ID = " + periode + "));";
 
                     OleDbCommand cmd = new OleDbCommand(my_querry, oleDbConnection);
                     cmd.ExecuteNonQuery();
                                         
                     Console.WriteLine(" Reli in Untis-DB abgewählt.");
+
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    oleDbConnection.Close();
+                }
+            }
+        }
+
+        public void UpdateStudentChoice(int periode)
+        {
+            using (OleDbConnection oleDbConnection = new OleDbConnection(Global.ConnectionStringUntis))
+            {
+                try
+                {
+                    oleDbConnection.Open();
+
+                    Console.Write(("[+] " + (this.IdAtlantis + " " + this.Nachname + ", " + this.Vorname).PadRight(40, '.') + " (" + this.Klasse + ") ").PadRight(75, '.'));
+
+                    String my_querry = @"
+UPDATE StudentChoice 
+SET StudentChoice.Deleted = False
+WHERE((StudentChoice.STUDENT_ID = " + this.IdUntis + " ) AND (TERM_ID = " + periode + "));";
+
+                    OleDbCommand cmd = new OleDbCommand(my_querry, oleDbConnection);
+                    cmd.ExecuteNonQuery();
+
+                    Console.WriteLine(" Reli in Untis-DB wieder aktiviert.");
 
                 }
                 catch (Exception ex)

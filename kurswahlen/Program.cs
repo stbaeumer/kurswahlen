@@ -42,6 +42,9 @@ namespace kurswahlen
 
                 Console.WriteLine("");
 
+                Console.WriteLine("ENTER beendet das Programm");
+                Console.ReadKey();
+                    
             }
             catch (Exception ex)
             {
