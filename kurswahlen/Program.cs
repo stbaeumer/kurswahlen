@@ -34,7 +34,7 @@ namespace kurswahlen
 
                 // Allen Schülern werden Gym-Wahlen zugewiesen
 
-                schuelers.KurswahlenGymIst(kurswahlenIst);
+                //schuelers.KurswahlenGymIst(kurswahlenIst);
                 
                 // Für alle Nicht-Gym-Schüler werden die Religionskurswahlen hinzugefügt
 

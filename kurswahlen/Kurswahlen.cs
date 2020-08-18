@@ -30,7 +30,7 @@ Student.Name,
 Student.StudNumber,
 StudentChoice.Deleted
 FROM Student LEFT JOIN StudentChoice ON Student.STUDENT_ID = StudentChoice.STUDENT_ID
-WHERE (((StudentChoice.SCHOOLYEAR_ID)= " + aktSj + ") AND ((StudentChoice.TERM_ID)=" + periode + ") AND (((StudentChoice.Deleted)=No))) ORDER BY StudentChoice.STUDENT_ID;";
+WHERE (((StudentChoice.SCHOOLYEAR_ID)= " + aktSj + ") AND ((StudentChoice.TERM_ID)=" + periode + ")) ORDER BY StudentChoice.STUDENT_ID;";
 
                     OleDbCommand oleDbCommand = new OleDbCommand(queryString, oleDbConnection);
                     oleDbConnection.Open();
@@ -41,6 +41,10 @@ WHERE (((StudentChoice.SCHOOLYEAR_ID)= " + aktSj + ") AND ((StudentChoice.TERM_I
                         Kurswahl kurswahl = new Kurswahl(aktSj, periode);
 
                         kurswahl.StudentId = oleDbDataReader.GetInt32(0);
+                        if (kurswahl.StudentId == 14644)
+                        {
+                            string a = "";
+                        }
                         kurswahl.Nachname = Global.SafeGetString(oleDbDataReader, 1);
                         kurswahl.Vorname = Global.SafeGetString(oleDbDataReader, 2);
                         kurswahl.Geburtsdatum = DateTime.ParseExact((oleDbDataReader.GetInt32(3)).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
