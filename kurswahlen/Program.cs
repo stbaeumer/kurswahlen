@@ -17,6 +17,8 @@ namespace kurswahlen
                 Console.WriteLine("Kurswahlen (Version 20200803)");
                 Console.WriteLine("=============================");
                 Console.WriteLine("");
+                Console.WriteLine("Das Programm liest die Religionskurswahlen aus Atlantis aus und trägt sie in Untis als Kurswahl ein.");
+
 
                 aktSj = new List<string>();
                 int periode = 0;

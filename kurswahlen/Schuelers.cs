@@ -641,6 +641,7 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                                     {
                                         kurswahl.AktSj = aktSJ;
                                         kurswahl.InsertIntoStudentChoice();
+                                        Console.ReadKey();
                                     }
 
                                     // Wenn die Relikurswahl existert, aber Deleted ist, wird sie wieder aktiviert:
@@ -654,6 +655,7 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                                     {
                                         kurswahl.AktSj = aktSJ;
                                         schueler.UpdateStudentChoice(periode);
+                                        Console.ReadKey();
                                     }
 
                                 }
