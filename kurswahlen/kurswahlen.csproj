@@ -52,6 +52,8 @@
     <Compile Include="Klasses.cs" />
     <Compile Include="Kurswahl.cs" />
     <Compile Include="Kurswahlen.cs" />
+    <Compile Include="Periode.cs" />
+    <Compile Include="Periodes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Schueler.cs" />

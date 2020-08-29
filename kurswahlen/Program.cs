@@ -18,13 +18,14 @@ namespace kurswahlen
                 Console.WriteLine("=============================");
                 Console.WriteLine("");
                 Console.WriteLine("Das Programm liest die Religionskurswahlen aus Atlantis aus und trägt sie in Untis als Kurswahl ein.");
-
-
+                
                 aktSj = new List<string>();
-                int periode = 0;
-
+                
                 aktSj.Add((DateTime.Now.Month >= 8 ? DateTime.Now.Year : DateTime.Now.Year - 1).ToString());
                 aktSj.Add((DateTime.Now.Month >= 8 ? DateTime.Now.Year + 1 : DateTime.Now.Year).ToString());
+
+                Periodes periodes = new Periodes(aktSj[0] + aktSj[1]);
+                var periode = periodes.Count;
 
                 Klasses klasses = new Klasses(aktSj[0] + aktSj[1], periode);
                 Schuelers schuelers = new Schuelers(klasses, aktSj[0] + aktSj[1]);

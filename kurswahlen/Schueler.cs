@@ -92,7 +92,9 @@ WHERE((StudentChoice.STUDENT_ID = " + this.IdUntis + " ) AND (TERM_ID = " + peri
                 {
                     oleDbConnection.Open();
 
-                    Console.Write(("[+] " + (this.IdAtlantis + " " + this.Nachname + ", " + this.Vorname).PadRight(40, '.') + " (" + this.Klasse + ") ").PadRight(75, '.'));
+                    Console.Write(("[+] " + (this.IdAtlantis + " " + this.Nachname + ", " + this.Vorname).PadRight(40, '.') + " (" + this.Klasse + ") ").PadRight(75, '.') + "ENTER");
+
+                    Console.ReadKey();
 
                     String my_querry = @"
 UPDATE StudentChoice 

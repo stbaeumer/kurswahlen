@@ -48,8 +48,10 @@ namespace kurswahlen
             {
                 try
                 {
-                    Console.Write(("[+] " + (this.StudentId + " " + this.Nachname + ", " + this.Vorname).PadRight(40,'.') + " (" + this.Klasse + ") ").PadRight(75, '.'));
-                    
+                    Console.Write(("[+] " + (this.StudentId + " " + this.Nachname + ", " + this.Vorname).PadRight(40,'.') + " (" + this.Klasse + ") ").PadRight(75, '.') + "ENTER");
+
+                    Console.ReadKey();
+
                     oleDbConnection.Open();
 
                     String my_querry = "INSERT INTO StudentChoice(" +
@@ -72,7 +74,7 @@ namespace kurswahlen
                     OleDbCommand cmd = new OleDbCommand(my_querry, oleDbConnection);
                     cmd.ExecuteNonQuery();
 
-                    Console.WriteLine(" Reli in Untis-DB hinzugefügt. ENTER");                    
+                    Console.WriteLine(" Reli in Untis-DB hinzugefügt.");                    
                 }
                 catch (Exception ex)
                 {

@@ -41,23 +41,34 @@ WHERE (((StudentChoice.SCHOOLYEAR_ID)= " + aktSj + ") AND ((StudentChoice.TERM_I
                         Kurswahl kurswahl = new Kurswahl(aktSj, periode);
 
                         kurswahl.StudentId = oleDbDataReader.GetInt32(0);
-                        if (kurswahl.StudentId == 14644)
+                        
+
+                        try
                         {
-                            string a = "";
+
+                            kurswahl.Nachname = Global.SafeGetString(oleDbDataReader, 1);
+                            if (kurswahl.Nachname == "Dillhage")
+                            {
+                                string a = "";
+                            }
+                            kurswahl.Vorname = Global.SafeGetString(oleDbDataReader, 2);
+                            kurswahl.Geburtsdatum = DateTime.ParseExact((oleDbDataReader.GetInt32(3)).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                            kurswahl.Number = Convert.ToInt32(oleDbDataReader.GetValue(4));
+                            kurswahl.AlternativeCourses.Add(Global.SafeGetString(oleDbDataReader, 5));
+                            kurswahl.StudentKurzname = Global.SafeGetString(oleDbDataReader, 6);
+                            kurswahl.Fach = (from f in fachs where f.IdUntis.ToString() == kurswahl.AlternativeCourses[0].Split('/')[1] select f.KürzelUntis).FirstOrDefault();
+                        
+                            kurswahl.Klasse = (from u in unterrichts
+                                               where u.IdUntis.ToString() == kurswahl.AlternativeCourses[0].Split('/')[0]
+                                               select u.Klasse.NameUntis).FirstOrDefault();
+                            kurswahl.AtlantisId = Global.SafeGetString(oleDbDataReader, 7);
+                            kurswahl.Deleted = oleDbDataReader.GetBoolean(8);
+                            this.Add(kurswahl);
                         }
-                        kurswahl.Nachname = Global.SafeGetString(oleDbDataReader, 1);
-                        kurswahl.Vorname = Global.SafeGetString(oleDbDataReader, 2);
-                        kurswahl.Geburtsdatum = DateTime.ParseExact((oleDbDataReader.GetInt32(3)).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                        kurswahl.Number = Convert.ToInt32(oleDbDataReader.GetValue(4));
-                        kurswahl.AlternativeCourses.Add(Global.SafeGetString(oleDbDataReader, 5));
-                        kurswahl.StudentKurzname = Global.SafeGetString(oleDbDataReader, 6);
-                        kurswahl.Fach = (from f in fachs where f.IdUntis.ToString() == kurswahl.AlternativeCourses[0].Split('/')[1] select f.KürzelUntis).FirstOrDefault();
-                        kurswahl.Klasse = (from u in unterrichts
-                                           where u.IdUntis.ToString() == kurswahl.AlternativeCourses[0].Split('/')[0]
-                                           select u.Klasse.NameUntis).FirstOrDefault();
-                        kurswahl.AtlantisId = Global.SafeGetString(oleDbDataReader, 7);
-                        kurswahl.Deleted = oleDbDataReader.GetBoolean(8);
-                        this.Add(kurswahl);
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Schüler " + kurswahl.Nachname + " " + kurswahl.Vorname + " hat keine Klasse");
+                        }
                     };
                     oleDbDataReader.Close();
                 }
