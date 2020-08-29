@@ -42,16 +42,14 @@ namespace kurswahlen
             AlternativeCourses = new List<string>();
         }
 
-        public void InsertIntoStudentChoice()
+        public void InsertIntoStudentChoice(int periode)
         {
             using (OleDbConnection oleDbConnection = new OleDbConnection(Global.ConnectionStringUntis))
             {
                 try
                 {
-                    Console.Write(("[+] " + (this.StudentId + " " + this.Nachname + ", " + this.Vorname).PadRight(40,'.') + " (" + this.Klasse + ") ").PadRight(75, '.') + "ENTER");
-
-                    Console.ReadKey();
-
+                    Console.Write(("[+] " + (this.StudentId + " " + this.Nachname + ", " + this.Vorname).PadRight(40,'.') + " (" + this.Klasse + ") ").PadRight(75, '.'));
+                    
                     oleDbConnection.Open();
 
                     String my_querry = "INSERT INTO StudentChoice(" +
@@ -67,7 +65,7 @@ namespace kurswahlen
                          this.AktSj + "','" +
                          "1" + "','" +
                          this.StudentId + "','" +
-                         Periode + "','" +
+                         periode + "','" +
                          this.Number + "','" +
                          this.AlternativeCourses[0] + "')";
 

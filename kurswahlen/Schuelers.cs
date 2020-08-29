@@ -640,7 +640,7 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                                           select k).Any())
                                     {
                                         kurswahl.AktSj = aktSJ;
-                                        kurswahl.InsertIntoStudentChoice();                                        
+                                        kurswahl.InsertIntoStudentChoice(periode);                                        
                                     }
 
                                     // Wenn die Relikurswahl existert, aber Deleted ist, wird sie wieder aktiviert:
@@ -656,7 +656,6 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                                         schueler.UpdateStudentChoice(periode);
                                         
                                     }
-
                                 }
 
                                 // Wenn der Schüler den existierenden Religionskurs abgewählt hat, ...
@@ -688,7 +687,7 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                     }
                     else
                     {
-                        Console.WriteLine("Der Schüler " + schueler.Nachname + ", " + schueler.Vorname + "(" + schueler.IdAtlantis +"; " + schueler.IdUntis  + ") hat keine Klasse.");
+                        //Console.WriteLine("Der Schüler " + schueler.Nachname + ", " + schueler.Vorname + "(" + schueler.IdAtlantis +"; " + schueler.IdUntis  + ") hat keine Klasse.");
                         //Console.ReadKey();
                     }
                 }
