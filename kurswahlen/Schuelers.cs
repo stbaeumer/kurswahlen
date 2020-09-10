@@ -379,10 +379,6 @@ ORDER BY ausgetreten DESC, klasse, schueler.name_1, schueler.name_2", connection
                     {
                         var schueler = new Schueler();
                         schueler.Id = theRow["AtlantisSchuelerId"] == null ? -99 : Convert.ToInt32(theRow["AtlantisSchuelerId"]);
-                        if (schueler.Id == 153778)
-                        {
-                            string a = "";
-                        }
                                                 
                         schueler.Nachname = theRow["Nachname"] == null ? "" : theRow["Nachname"].ToString();
                         schueler.Vorname = theRow["Vorname"] == null ? "" : theRow["Vorname"].ToString();
@@ -430,7 +426,8 @@ Longname,
 Name,
 Flags,
 Student_ID,
-CLASS_ID
+CLASS_ID,
+Deleted
 FROM Student 
 WHERE SCHOOLYEAR_ID =" + aktSj + ";";
 
@@ -466,7 +463,9 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                             }
                             schueler.GeschlechtMw = Global.SafeGetString(oleDbDataReader, 6);
                             schueler.IdUntis = oleDbDataReader.GetInt32(7);
-                            
+                            schueler.UntisClass_Id = oleDbDataReader.GetInt32(8);
+                            schueler.Deleted = oleDbDataReader.GetBoolean(9);
+
                             // Die idUntis wird vorhandenen Schülern zugewiesen
                             var schü = (from s in this where s.Anmeldename == schueler.Anmeldename select s).FirstOrDefault();
                             if (schü != null)
@@ -474,9 +473,29 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                                 schü.IdUntis = schueler.IdUntis;
                             }
 
-                            schueler.Klasse = (from a in atlantisschulers
-                                               where a.Mail == schueler.MailAtlantis
-                                               select a.Klasse).FirstOrDefault();
+                            var untisKlasseName = (from k in klasses where k.IdUntis == schueler.UntisClass_Id select k.NameUntis).FirstOrDefault();
+
+                            var atlantisKlasseName = (from a in atlantisschulers
+                                                      where a.Mail == schueler.MailAtlantis
+                                                      select a.Klasse).FirstOrDefault();
+
+                            schueler.Klasse = atlantisKlasseName;
+
+                            if (atlantisKlasseName != null && untisKlasseName != atlantisKlasseName)
+                            {                                
+                                Console.WriteLine("[!] Der Schüler " + schueler.Nachname + " " + schueler.Vorname + " ist in Untis in der falschen Klasse (" + untisKlasseName + "). Er wird nach " + atlantisKlasseName + " umgebucht.");
+                                
+
+                                var untisZielKlasseId = (from k in klasses where k.NameUntis == atlantisKlasseName select k.IdUntis).FirstOrDefault();
+                                
+                                KlasseWechseln(schueler, untisKlasseName, untisZielKlasseId, aktSj);
+
+                                
+
+
+                            }
+
+                            schueler.Klasse = atlantisKlasseName;
 
 
                             schueler.Reliabmeldung = (from a in atlantisschulers
@@ -488,8 +507,17 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                                                       select a.Relianmeldung).FirstOrDefault();
 
 
-                            schuelers.Add(schueler);
-                            
+                            if ((from a in atlantisschulers where a.Mail == schueler.MailAtlantis where !schueler.Deleted select a).Any())
+                            {
+                                schuelers.Add(schueler);
+                            }
+                            else
+                            {
+                                if (!schueler.Deleted)
+                                {    
+                                    DeleteSchuelerAusUntis(schueler, aktSj);
+                                }                                
+                            }
                         };
                         oleDbDataReader.Close();
 
@@ -510,6 +538,62 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
 
                         Console.WriteLine(this.Count);
                     }
+                }
+            }
+        }
+
+        private void DeleteSchuelerAusUntis(Schueler schueler, string aktSj)
+        {
+            using (OleDbConnection oleDbConnection = new OleDbConnection(Global.ConnectionStringUntis))
+            {
+                try
+                {
+                    Console.WriteLine(("[-] " + (schueler.Nachname + ", " + schueler.Vorname).PadRight(40, '.') + " (" + schueler.Klasse + ") wird gelöscht.").PadRight(75, '.'));
+
+                    oleDbConnection.Open();
+
+                    String my_querry = @"UPDATE Student SET 
+Student.Deleted = True
+WHERE(((Student.SCHOOL_ID) = 177659) AND((Student.SCHOOLYEAR_ID) = " + aktSj + ") AND((Student.VERSION_ID) = 1) AND((Student.STUDENT_ID) = " + schueler.IdUntis + "));";
+
+                    OleDbCommand cmd = new OleDbCommand(my_querry, oleDbConnection);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    oleDbConnection.Close();
+                }
+            }
+        }
+
+        private void KlasseWechseln(Schueler schueler, string quellKlasse, int untisZielKlasseId, string aktSj)
+        {
+            using (OleDbConnection oleDbConnection = new OleDbConnection(Global.ConnectionStringUntis))
+            {
+                try
+                {
+                    Console.WriteLine(("[U] " + (schueler.Nachname + ", " + schueler.Vorname).PadRight(40, '.') + " (" + quellKlasse + ") -> " + schueler.Klasse + "").PadRight(75, '.'));
+
+                    oleDbConnection.Open();
+
+                    String my_querry = @"UPDATE Student SET 
+Student.CLASS_ID = " + untisZielKlasseId + @" 
+WHERE(((Student.SCHOOL_ID) = 177659) AND((Student.SCHOOLYEAR_ID) = " + aktSj + ") AND((Student.VERSION_ID) = 1) AND((Student.STUDENT_ID) = " + schueler.IdUntis + "));";
+
+                    OleDbCommand cmd = new OleDbCommand(my_querry, oleDbConnection);
+                    cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    oleDbConnection.Close();
                 }
             }
         }

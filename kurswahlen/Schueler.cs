@@ -46,6 +46,8 @@ namespace kurswahlen
         public int IdUntis { get; internal set; }
         public string Klasse { get; internal set; }
         internal List<Kurswahl> Kurse { get; set; }
+        public int UntisClass_Id { get; internal set; }
+        public bool Deleted { get; internal set; }
 
         internal void Kurswahlen()
         {
