@@ -379,8 +379,11 @@ ORDER BY ausgetreten DESC, klasse, schueler.name_1, schueler.name_2", connection
                     {
                         var schueler = new Schueler();
                         schueler.Id = theRow["AtlantisSchuelerId"] == null ? -99 : Convert.ToInt32(theRow["AtlantisSchuelerId"]);
-                                                
                         schueler.Nachname = theRow["Nachname"] == null ? "" : theRow["Nachname"].ToString();
+                        if (schueler.Nachname == "Haupt")
+                        {
+                            string a = "";
+                        }
                         schueler.Vorname = theRow["Vorname"] == null ? "" : theRow["Vorname"].ToString();
                         schueler.Klasse = theRow["Klasse"] == null ? "" : theRow["Klasse"].ToString();
                         schueler.Gebdat = theRow["Gebdat"].ToString().Length < 3 ? new DateTime() : DateTime.ParseExact(theRow["Gebdat"].ToString(), "dd.MM.yyyy HH:mm:ss", System.Globalization.CultureInfo.InvariantCulture);
@@ -441,6 +444,8 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                         {
                             Schueler schueler = new Schueler();
                             schueler.IdAtlantis = Convert.ToInt32(Global.SafeGetString(oleDbDataReader, 0));
+                            
+
                             schueler.MailAtlantis = Global.SafeGetString(oleDbDataReader, 1);
 
                             try
@@ -549,7 +554,7 @@ WHERE SCHOOLYEAR_ID =" + aktSj + ";";
                 try
                 {
                     Console.WriteLine(("[-] " + (schueler.Nachname + ", " + schueler.Vorname).PadRight(40, '.') + " (" + schueler.Klasse + ") wird gelöscht.").PadRight(75, '.'));
-
+                    Console.ReadKey();
                     oleDbConnection.Open();
 
                     String my_querry = @"UPDATE Student SET 
@@ -577,6 +582,7 @@ WHERE(((Student.SCHOOL_ID) = 177659) AND((Student.SCHOOLYEAR_ID) = " + aktSj + "
                 try
                 {
                     Console.WriteLine(("[U] " + (schueler.Nachname + ", " + schueler.Vorname).PadRight(40, '.') + " (" + quellKlasse + ") -> " + schueler.Klasse + "").PadRight(75, '.'));
+                    Console.ReadKey();
 
                     oleDbConnection.Open();
 
